@@ -10,8 +10,13 @@ import UIKit
 class PersonsListViewController: UITableViewController {
 
     private var persons = Person.getPersonsList(persons: personsInfo)
+    
+    override func viewDidLoad() {
+        sendPersonsInfoToPersonsListWithDetailsVC()
+    }
 
     // MARK: - Table view data source
+    
     override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         persons.count
     }
@@ -28,23 +33,23 @@ class PersonsListViewController: UITableViewController {
     }
 
     // MARK: - Navigation
+    
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
+        guard let personDetailVC = segue.destination as? PersonDetailViewController else { return }
+        
+        guard let indexPath = tableView.indexPathForSelectedRow else { return }
+        let person = persons[indexPath.row]
+        
+        personDetailVC.person = person
+    }
+    
+    private func sendPersonsInfoToPersonsListWithDetailsVC() {
         guard let tabBarController = tabBarController else { return }
         guard let viewControllers = tabBarController.viewControllers else { return }
         
-        for viewController in viewControllers {
-            if let _ = viewController as? UINavigationController {
-                guard let personDetailVC = segue.destination as? PersonDetailViewController else { return }
-                
-                guard let indexPath = tableView.indexPathForSelectedRow else { return }
-                let person = persons[indexPath.row]
-                
-                personDetailVC.person = person
-                
-            } else if let navigationVC = viewController as? UINavigationController {
-                let personsListWithDetailsVC = navigationVC.topViewController as! PersonsListWithDetailsViewController
-                personsListWithDetailsVC.persons = persons
-            }
-        }
+        guard let navigationVC = viewControllers[1] as? UINavigationController else { return }
+        guard let personsListWithDetailsVC = navigationVC.topViewController as? PersonsListWithDetailsViewController else { return }
+        
+        personsListWithDetailsVC.persons = persons
     }
 }
