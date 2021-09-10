@@ -9,9 +9,11 @@ import UIKit
 
 class PersonsListViewController: UITableViewController {
 
-    private var persons = Person.getPersonsList(persons: personsInfo)
+    private var persons = Person.getPersonsList()
     
     override func viewDidLoad() {
+        super.viewDidLoad()
+        
         sendPersonsInfoToPersonsListWithDetailsVC()
     }
 
