@@ -9,13 +9,7 @@ import UIKit
 
 class PersonsListViewController: UITableViewController {
 
-    private var persons = Person.getPersonsList()
-    
-    override func viewDidLoad() {
-        super.viewDidLoad()
-        
-        sendPersonsInfoToPersonsListWithDetailsVC()
-    }
+    var persons: [Person]!
 
     // MARK: - Table view data source
     
@@ -38,20 +32,10 @@ class PersonsListViewController: UITableViewController {
     
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
         guard let personDetailVC = segue.destination as? PersonDetailViewController else { return }
-        
+
         guard let indexPath = tableView.indexPathForSelectedRow else { return }
         let person = persons[indexPath.row]
-        
+
         personDetailVC.person = person
-    }
-    
-    private func sendPersonsInfoToPersonsListWithDetailsVC() {
-        guard let tabBarController = tabBarController else { return }
-        guard let viewControllers = tabBarController.viewControllers else { return }
-        
-        guard let navigationVC = viewControllers[1] as? UINavigationController else { return }
-        guard let personsListWithDetailsVC = navigationVC.topViewController as? PersonsListWithDetailsViewController else { return }
-        
-        personsListWithDetailsVC.persons = persons
     }
 }
